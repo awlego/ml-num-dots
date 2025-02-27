@@ -1,3 +1,5 @@
 env3.10/
 results/
 interesting_results/
+.DS_Store
+.ipynb_checkpoints/
