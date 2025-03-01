@@ -14,7 +14,7 @@ total_tokens = 0
 
 # eventually test anthropic / openai too
 # models_to_test = ['deepseek-r1:1.5b', 'deepseek-r1:7b', 'deepseek-r1:14b', 'deepseek-r1:32b']
-models_to_test = ['deepseek-r1:32b']
+models_to_test = ['deepseek-r1:1.5b']
 eval_model = 'llama3'
 
 prompts_templates = [
@@ -26,18 +26,18 @@ prompts_templates = [
     "Do not use code. Analyze the following sequence and determine exactly how many periods/dots '.' it contains.\n\nUse THREE different methods to determine the count:\n1. Count each dot one by one, showing your count (1st, 2nd, 3rd...)\n2. Count the total characters and use a mathematical formula\n3. Count in reverse from the end to verify\n\nOnly if all three methods give the same answer, provide that as your final count.\n\nSequence: {}"
 ]
 # Enable/disable specific prompt templates (by index)
-enabled_prompts = [0, 3, 4, 5]
+enabled_prompts = [0]
 
 sequences = [
     lambda n: n * '.',      # Just dots
     lambda n: n * '. '      # Dots with spaces
 ]
 # Enable/disable specific sequences (by index)
-enabled_sequences = [0, 1]
+enabled_sequences = [1]
 
-num_repeats = 5
+num_repeats = 100
 
-max_dots_in_sequence = 35
+max_dots_in_sequence = 25
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 output_dir = "results"
 os.makedirs(output_dir, exist_ok=True)
@@ -69,7 +69,7 @@ for model in models_to_test:
                 prompt = prompt_template.format(sequence)
                 
                 # Repeat each prompt num_repeats times
-                for repeat_idx in range(num_repeats):
+                for repeat_idx in tqdm(range(num_repeats), desc=f"Repeats for {prompt}"):
                     iteration_start = time.time()
                     response = ollama.chat(
                         model=model,
